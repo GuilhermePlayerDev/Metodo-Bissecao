@@ -1,140 +1,53 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 
-//Função: e^x - x².
+// Defina a fun��o alvo
+double f(double x) {
+	double r1 = pow(2.7182818284590452353602874713527, x);
+	double r2 = x*x;
+    return r1-r2; // Exemplo: f(x) = x^2 - 4
+}
 
-float recebeerro()
-{
-    printf("Digite o valor do erro: ");
-    float erro;
-    scanf("%f", &erro);
-    return erro;
-}
-float recebeA()
-{
-    printf("Digite o valor de A: ");
-    float a;
-    scanf("%f", &a);
-    return a;
-}
-float recebeB()
-{
-    printf("Digite o valor de B: ");
-    float b;
-    scanf("%f", &b);
-    return b;
-}
-float novoA(float x)
-{
-    float a = x;
-    return a;
-}
-float novoB(float x)
-{
-    float b = x;
-    return b;
-}
-float calcularX(float a, float b)
-{
-    float x = (a + b) / 2;
-    return x;
-}
-float calcularFAXB(float x)
-{
-    float resultado = (pow(2.71, x) - (x * x));
-    return resultado;
-}
-/*
-float calcularFA(float a)
-{
-    float resultado = (pow(2.71, a) - (a * a));
-    return resultado;
-}
-float calcularFB(float b)
-{
-    float resultado = (pow(2.71, b) - (b * b));
-    return resultado;
-}*/
-void execucao(int k, float a, float b, float erro, float x, float fx, float fa, float fb)
-{
-    do
-    {
-        x = calcularX(a, b);
-        fx = calcularFAXB(x);
-        fa = calcularFAXB(a);
-        fb = calcularFAXB(b);
+int main() {
+    double a, b, erro, fa, fb, m, fm;
+    int iter = 0;
 
-        if ((fa < 0 && fb > 0) || (fa > 0 && fb < 0))
-        {
-            b = novoB(x);
-        }
-        else
-        {
-            a = novoA(x);
-        }
-        x = calcularX(a, b);
-        fx = calcularFAXB(x);
-        fa = calcularFAXB(a);
-        fb = calcularFAXB(b);
+    printf("Metodo da Bissecao\n");
+    printf("Digite o ponto a: ");
+    scanf("%lf", &a);
+    printf("Digite o ponto b: ");
+    scanf("%lf", &b);
+    printf("Digite a margem de erro (para f(x)): ");
+    scanf("%lf", &erro);
 
-        k++;
-    } while (fabs(fx) > erro);
-}
-void menu()
-{
-    float a = 0, b = 0;
-    float x = 0, fx = 0, fa = 0, fb = 0;
-    int opcao;
-    while (1)
-    {
-        system("cls");
-        printf("\n\tEscolha uma opção:\n");
-        printf("\n\n1. Escolher A.");
-        printf("\n\n2. Escolher B.");
-        printf("\n\n3. Rodar.");
-        printf("\n\n4. Parar.");
-        printf("\n\n5. Sair.");
-        scanf("%d", &opcao);
-        setbuf(stdin, NULL);
+    fa = f(a);
+    fb = f(b);
 
-        switch (opcao)
-        {
-        case 1:
-            system("cls");
-            a = recebeA();
-            break;
-
-        case 2:
-            system("cls");
-            b = recebeB();
-            break;
-
-        case 3:
-            system("cls");
-            float erro = recebeerro();
-            printf("\nErro recebido.");
-            int k = 0;
-            printf("\nExecução em progresso...");
-            execucao(k, a, b, erro, x, fx, fa, fb);
-            printf("\nExecução em concluída.");
-            break;
-
-        case 4:
-            system("cls");
-            printf("\nInterrompendo.");
-            printf("\nProcesso interrompido.");
-            break;
-
-        case 5:
-            system("cls");
-            printf("\nSaindo.");
-            exit(0);
-        }
+    if (fa * fb > 0) {
+        printf("Nao ha raiz no intervalo [%.6lf, %.6lf]\n", a, b);
+        return 1;
     }
-}
-int main()
-{
-    menu();
+
+    do {
+        m = (a + b) / 2.0;
+        fm = f(m);
+
+        printf("Iteracao %d: a=%.6lf, b=%.6lf, m=%.6lf, f(m)=%.6lf\n",
+               iter, a, b, m, fm);
+
+        if (fa * fm < 0) {
+            b = m;
+            fb = fm;
+        } else {
+            a = m;
+            fa = fm;
+        }
+
+        iter++;
+    } while (fabs(fm) > erro);
+
+    printf("\nA raiz aproximada eh: %.6lf (com f(m)=%.6lf)\n", m, fm);
+
     return 0;
 }
+
